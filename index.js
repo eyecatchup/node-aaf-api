@@ -26,54 +26,59 @@ aafApi.getSeasonScheduleGames = function(fn) {
     let requestPayload = {
         operationName: 'getSeasonScheduleGamesQuery',
         variables: {},
-        query: 'query getSeasonScheduleGamesQuery {\n' +
-               '  seasonsConnection(last: 1) {\n' +
-               '    nodes {\n' +
-               '      id\n' +
-               '      gamesConnection(first: 60) {\n' +
-               '        nodes {\n' +
-               '          ...seasonGameFragment\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      __typename\n' +
-               '    }\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '}\n' +
-               '\n' +
-               'fragment seasonGameFragment on Game {\n' +
-               '  id\n' +
-               '  timeToBeDetermined\n' +
-               '  subseason\n' +
-               '  time\n' +
-               '  awayTeam {\n' +
-               '    id\n' +
-               '    regionName\n' +
-               '    abbreviation\n' +
-               '    name\n' +
-               '    wordmark(style: LIGHT_BACKGROUND) {\n' +
-               '      id\n' +
-               '      url\n' +
-               '      __typename\n' +
-               '    }\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '  homeTeam {\n' +
-               '    id\n' +
-               '    regionName\n' +
-               '    abbreviation\n' +
-               '    name\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '  stadium {\n' +
-               '    id\n' +
-               '    name\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '  __typename\n' +
-               '}\n'
+        query: `query getSeasonScheduleGamesQuery {
+                    seasonsConnection(last: 1) {
+                        nodes {
+                            id
+                            gamesConnection(first: 60) {
+                                nodes {
+                                    ...seasonGameFragment
+                                    __typename
+                                }
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment seasonGameFragment on Game {
+                    id
+                    timeToBeDetermined
+                    subseason
+                    time
+                    awayTeam {
+                        id
+                        regionName
+                        abbreviation
+                        name
+                        wordmark(style: LIGHT_BACKGROUND) {
+                            id
+                            url
+                            __typename
+                        }
+                        __typename
+                    }
+                    homeTeam {
+                        id
+                        regionName
+                        abbreviation
+                        name
+                        wordmark(style: LIGHT_BACKGROUND) {
+                            id
+                            url
+                            __typename
+                        }
+                        __typename
+                    }
+                    stadium {
+                        id
+                        name
+                        __typename
+                    }
+                    __typename
+                }`
     };
     postRequest(requestPayload, fn);
 };
@@ -86,72 +91,72 @@ aafApi.getGamesByDateRange = function(dateRange, fn) {
             'beforeTime': dateRange.to,
             'first': 20
         },
-        query: 'query getListOfGameQuery($first: Int, $atOrAfterTime: DateTime!, $beforeTime: DateTime!) {\n' +
-               '  gamesConnection(first: $first, atOrAfterTime: $atOrAfterTime, beforeTime: $beforeTime) {\n' +
-               '    nodes {\n' +
-               '      id\n' +
-               '      time\n' +
-               '      status {\n' +
-               '        phase\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      awayTeam {\n' +
-               '        id\n' +
-               '        abbreviation\n' +
-               '        logo(style: LIGHT_BACKGROUND) {\n' +
-               '          url\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        colors\n' +
-               '        seasonsConnection(last: 1) {\n' +
-               '          edges {\n' +
-               '            stats {\n' +
-               '              gamesWon\n' +
-               '              gamesLost\n' +
-               '              __typename\n' +
-               '            }\n' +
-               '            __typename\n' +
-               '          }\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      homeTeam {\n' +
-               '        id\n' +
-               '        abbreviation\n' +
-               '        logo(style: LIGHT_BACKGROUND) {\n' +
-               '          url\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        colors\n' +
-               '        seasonsConnection(last: 1) {\n' +
-               '          edges {\n' +
-               '            stats {\n' +
-               '              gamesWon\n' +
-               '              gamesLost\n' +
-               '              __typename\n' +
-               '            }\n' +
-               '            __typename\n' +
-               '          }\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      ticketingWebsiteURL\n' +
-               '      availability {\n' +
-               '        shortName\n' +
-               '        url\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      stadium {\n' +
-               '        name\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      __typename\n' +
-               '    }\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '}\n'
+        query: `query getListOfGameQuery($first: Int, $atOrAfterTime: DateTime!, $beforeTime: DateTime!) {
+                    gamesConnection(first: $first, atOrAfterTime: $atOrAfterTime, beforeTime: $beforeTime) {
+                        nodes {
+                            id
+                            time
+                            status {
+                                phase
+                                __typename
+                            }
+                            awayTeam {
+                                id
+                                abbreviation
+                                logo(style: LIGHT_BACKGROUND) {
+                                    url
+                                    __typename
+                                }
+                                colors
+                                seasonsConnection(last: 1) {
+                                    edges {
+                                        stats {
+                                            gamesWon
+                                            gamesLost
+                                            __typename
+                                        }
+                                        __typename
+                                    }
+                                    __typename
+                                }
+                                __typename
+                            }
+                            homeTeam {
+                                id
+                                abbreviation
+                                logo(style: LIGHT_BACKGROUND) {
+                                    url
+                                    __typename
+                                }
+                                colors
+                                seasonsConnection(last: 1) {
+                                    edges {
+                                        stats {
+                                            gamesWon
+                                            gamesLost
+                                            __typename
+                                        }
+                                        __typename
+                                    }
+                                    __typename
+                                }
+                                __typename
+                            }
+                            ticketingWebsiteURL
+                            availability {
+                                shortName
+                                url
+                                __typename
+                            }
+                            stadium {
+                                name
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                }`
     };
     postRequest(requestPayload, fn);
 };
@@ -163,45 +168,45 @@ aafApi.getLiveGamesByDateRange = function(dateRange, fn) {
             atOrAfterTime: dateRange.from,
             beforeTime: dateRange.to
         },
-        query: 'query getListOfLiveGameQuery($beforeTime: DateTime!, $atOrAfterTime: DateTime!) {\n' +
-               '  gamesConnection(beforeTime: $beforeTime, atOrAfterTime: $atOrAfterTime, first: 50) {\n' +
-               '    nodes {\n' +
-               '      id\n' +
-               '      awayTeam {\n' +
-               '        id\n' +
-               '        name\n' +
-               '        abbreviation\n' +
-               '        logo(style: LIGHT_BACKGROUND) {\n' +
-               '          url\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        colors\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      homeTeam {\n' +
-               '        id\n' +
-               '        name\n' +
-               '        abbreviation\n' +
-               '        logo(style: LIGHT_BACKGROUND) {\n' +
-               '          url\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        colors\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      status {\n' +
-               '        phase\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      stadium {\n' +
-               '        name\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      __typename\n' +
-               '    }\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '}\n'
+        query: `query getListOfLiveGameQuery($beforeTime: DateTime!, $atOrAfterTime: DateTime!) {
+                    gamesConnection(beforeTime: $beforeTime, atOrAfterTime: $atOrAfterTime, first: 50) {
+                        nodes {
+                            id
+                            awayTeam {
+                                id
+                                name
+                                abbreviation
+                                logo(style: LIGHT_BACKGROUND) {
+                                    url
+                                    __typename
+                                }
+                                colors
+                                __typename
+                            }
+                            homeTeam {
+                                id
+                                name
+                                abbreviation
+                                logo(style: LIGHT_BACKGROUND) {
+                                    url
+                                    __typename
+                                }
+                                colors
+                                __typename
+                            }
+                            status {
+                                phase
+                                __typename
+                            }
+                            stadium {
+                                name
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                }`
     };
     postRequest(requestPayload, fn);
 };
@@ -212,68 +217,206 @@ aafApi.getLiveGameData = function(gameId, fn) {
         variables: {
             gameId: gameId
         },
-        query: 'query getLiveGameDataQuery($gameId: ID!) {\n' +
-               '  node(id: $gameId) {\n' +
-               '    ... on Game {\n' +
-               '      id\n' +
-               '      clock {\n' +
-               '        seconds\n' +
-               '        time\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      homeTeam {\n' +
-               '        id\n' +
-               '        name\n' +
-               '        abbreviation\n' +
-               '        logo(style: LIGHT_BACKGROUND) {\n' +
-               '          url\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        colors\n' +
-               '        seasonsConnection(last: 1) {\n' +
-               '          edges {\n' +
-               '            stats {\n' +
-               '              gamesWon\n' +
-               '              gamesLost\n' +
-               '              __typename\n' +
-               '            }\n' +
-               '            __typename\n' +
-               '          }\n' +
-               '          __typename\n' +
-               '        }\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      awayTeam {' +
-               '        id\n' +
-               '        name\n' +
-               '        abbreviation\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      status {\n' +
-               '        awayTeamPoints\n' +
-               '        homeTeamPoints\n' +
-               '        quarter\n' +
-               '        time\n' +
-               '        down\n' +
-               '        yardsToGo\n' +
-               '        phase\n' +
-               '        possession\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      stadium {\n' +
-               '        name\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      avStreams {\n' +
-               '        hlsMasterPlaylistURL\n' +
-               '        __typename\n' +
-               '      }\n' +
-               '      hlsMasterPlaylistURL\n' +
-               '      __typename\n' +
-               '    }\n' +
-               '    __typename\n' +
-               '  }\n' +
-               '}\n'
+        query: `query getLiveGameDataQuery($gameId: ID!) {
+                    node(id: $gameId) {
+                        ... on Game {
+                            id
+                            clock {
+                                seconds
+                                time
+                                __typename
+                            }
+                            homeTeam {
+                                id
+                                name
+                                abbreviation
+                                logo(style: LIGHT_BACKGROUND) {
+                                    url
+                                    __typename
+                                }
+                                colors
+                                seasonsConnection(last: 1) {
+                                    edges {
+                                        stats {
+                                            gamesWon
+                                            gamesLost
+                                            __typename
+                                        }
+                                        __typename
+                                    }
+                                    __typename
+                                }
+                                __typename
+                            }
+                            awayTeam {
+                                id
+                                name
+                                abbreviation
+                                logo(style: LIGHT_BACKGROUND) {
+                                    url
+                                    __typename
+                                }
+                                colors
+                                seasonsConnection(last: 1) {
+                                    edges {
+                                        stats {
+                                            gamesWon
+                                            gamesLost
+                                            __typename
+                                        }
+                                        __typename
+                                    }
+                                    __typename
+                                }
+                                __typename
+                            }
+                            status {
+                                awayTeamPoints
+                                homeTeamPoints
+                                quarter
+                                time
+                                down
+                                yardsToGo
+                                phase
+                                possession
+                                __typename
+                            }
+                            stadium {
+                                name
+                                __typename
+                            }
+                            avStreams {
+                                hlsMasterPlaylistURL
+                                __typename
+                            }
+                            hlsMasterPlaylistURL
+                            __typename
+                        }
+                        __typename
+                    }
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getFullGameStatsByTeam = function(gameId, fn) {
+    let requestPayload = {
+        variables: {
+            gameId: gameId
+        },
+        query: `query getFullGameStatsByTeam($gameId: ID!) {
+                    node(id: $gameId) {
+                        ... on Game {
+                            homeTeamEdge {
+                                ...teamEdge
+                            }
+                            awayTeamEdge {
+                                ...teamEdge
+                            }
+                        }
+                    }
+                }
+
+                fragment teamEdge on GameTeamEdge {
+                    stats {
+                        gamesWon
+                        gamesLost
+                        gamesPlayed
+                        rushingPlays
+                        rushingYardsNet
+                        passingPlays
+                        passesAttempted
+                        passesCompleted
+                        passesIntercepted
+                        passingYardsNet
+                        passingYardsGross
+                        firstDownsByPassing
+                        firstDownsByPenalty
+                        firstDownsByRushing
+                        thirdDownsConverted
+                        thirdDownsUnconverted
+                        fourthDownsConverted
+                        fourthDownsUnconverted
+                        fumbles
+                        ownFumblesRecovered
+                        turnovers
+                        timesSacked
+                        sackYardsLost
+                        averageYardsPerPlay
+                        averagePointsPerGame
+                        averageTurnoversPerGame
+                        averageTimesSackedPerGame
+                        averagePassingYardsNetPerGame
+                        averageRushingYardsNetPerGame
+                        averageTimeOfPossessionPerGameMilliseconds
+                        timeOfPossessionMilliseconds
+                        twoPointConversionsAttempted
+                        twoPointConversionsCompleted
+                        twoPointConversionCompletionPercentage
+                        points
+                    }
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
+    let requestPayload = {
+        variables: {
+            gameId: gameId
+        },
+        query: `query getFullGameStatsByPlayer($gameId: ID!) {
+                    node(id: $gameId) {
+                        ... on Game {
+                            playersConnection(first: 500) {
+                                edges {
+                                    node {
+                                        jerseyNumber
+                                        legalName {
+                                            familyName
+                                            givenName
+                                        }
+                                    }
+                                    team {
+                                        abbreviation
+                                    }
+                                    stats {
+                                        passesAttempted
+                                        passesCompleted
+                                        passingYards
+                                        passingTouchdowns
+                                        passesIntercepted
+                                        rushesAttempted
+                                        rushingYards
+                                        rushingTouchdowns
+                                        receptions
+                                        receivingYards
+                                        receivingTouchdowns
+                                        tackles
+                                        assistedTackles
+                                        tacklesForLoss
+                                        sacks
+                                        sackYardsGained
+                                        passDefenses
+                                        quarterbackHits
+                                        fumbles
+                                        fumblesRecovered
+                                        fieldGoalsMade
+                                        fieldGoalsBlocked
+                                        twoPointConversionPassReceptionsGood
+                                        miscellaneousTackles
+                                        miscellaneousTackleAssists
+                                        miscellaneousAssistedTackles
+                                        miscellaneousFumblesRecovered
+                                        miscellaneousOwnFumblesRecovered
+                                        miscellaneousOpponentFumblesForced
+                                        miscellaneousOpponentFumblesRecovered
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }`
     };
     postRequest(requestPayload, fn);
 };

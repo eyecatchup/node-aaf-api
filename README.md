@@ -10,6 +10,14 @@ const aafApi = require('node-aaf-api');
 
 ## Examples
 
+You can find examples in the examples directory. To run them, use (for example):
+
+```sh
+node examples/getFullGameStatsByTeam.js
+```
+
+### Custom queries
+
 If you want to send your custom GraphQL queries, use:
 
 ```js
@@ -26,9 +34,11 @@ aafApi.query(customGraphqlQuery, function(error, response, body) {
 });
 ```
 
+### Predefined queries
+
 For convenience, some GraphQL queries are already wrapped:
 
-### Get all scheduled season games
+#### Get all scheduled season games
 
 ```js
 aafApi.getSeasonScheduleGames(function(error, response, body) {
@@ -40,7 +50,7 @@ aafApi.getSeasonScheduleGames(function(error, response, body) {
 });
 ```
 
-### Get games (by date range)
+#### Get games (by date range)
 
 ```js
 let dateRange = {
@@ -57,7 +67,7 @@ aafApi.getGamesByDateRange(dateRange, function(error, response, body) {
 });
 ```
 
-### Get live games (by date range)
+#### Get live games (by date range)
 
 ```js
 let dateRange = {
@@ -74,7 +84,7 @@ aafApi.getLiveGamesByDateRange(dateRange, function(error, response, body) {
 });
 ```
 
-### Get live game data (by gameId)
+#### Get live game data (by gameId)
 
 ```js
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
@@ -84,6 +94,34 @@ aafApi.getLiveGameData(gameId, function(error, response, body) {
         throw new Error(error);
     } else {
         console.log(body.data.node);
+    }
+});
+```
+
+#### Get full team game stats (by gameId)
+
+```js
+let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
+
+aafApi.getFullGameStatsByTeam(gameId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node);
+    }
+});
+```
+
+#### Get full player game stats (by gameId)
+
+```js
+let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
+
+aafApi.getFullGameStatsByPlayer(gameId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node.playersConnection.edges);
     }
 });
 ```

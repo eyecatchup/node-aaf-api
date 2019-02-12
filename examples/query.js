@@ -2,7 +2,25 @@ const aafApi = require('../');
 
 // Get game ticker
 let requestPayload = {
-    query: '{node(id: "Gid2AorIFgJgIqqgIphAWXYkSJWF") { ... on Game {playsConnection(first: 1000) {nodes {description}}}}}'
+    query: `{
+      node(id: "Gjm5E9bwm9-ZIwVYJqIG6cvI2Ner") {
+        ... on Game {
+          homeTeamEdge {
+            ...teamEdge
+          }
+          awayTeamEdge {
+            ...teamEdge
+          }
+        }
+      }
+    }
+
+    fragment teamEdge on GameTeamEdge {
+      stats {
+        passingPlays
+        rushingPlays
+      }
+    }`
 };
 
 // Get all Quarterbacks
@@ -13,6 +31,6 @@ aafApi.query(requestPayload, function(error, response, body) {
     if (error) {
         throw new Error(error);
     } else {
-        console.log(body.data.node.playsConnection.nodes);
+        console.log(body.data);
     }
 });
