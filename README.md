@@ -139,3 +139,77 @@ aafApi.getPlayFeedByGame(gameId, function(error, response, body) {
     }
 });
 ```
+
+#### Get basic team info (by teamId)
+
+_No season stats, player & game infos included_
+
+```js
+let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
+
+aafApi.getTeamInfoBasic(teamId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node);
+    }
+});
+```
+
+#### Get full team info (by teamId)
+
+_Incl. season stats, player & game infos_
+
+```js
+let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
+
+aafApi.getTeamInfo(teamId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node);
+    }
+});
+```
+
+#### Get full season team stats (by teamId)
+
+```js
+let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
+
+aafApi.getPlayersByTeam(teamId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node);
+    }
+});
+```
+
+#### Get all matches by team (by teamId)
+
+```js
+let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
+
+aafApi.getGamesByTeam(teamId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node);
+    }
+});
+```
+
+#### Get all players by team (by teamId)
+
+```js
+let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
+
+aafApi.getPlayersByTeam(teamId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node);
+    }
+});
+```

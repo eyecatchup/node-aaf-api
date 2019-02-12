@@ -448,4 +448,327 @@ aafApi.getPlayFeedByGame = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
+aafApi.getTeamInfoBasic = function(teamId, fn) {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getTeamInfoBasic($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            ...teamInformationFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment teamInformationFragment on Team {
+                    id
+                    name
+                    abbreviation
+                    colors
+                    coach {
+                        name {
+                            givenName
+                            familyName
+                        }
+                    }
+                    wordmark {
+                        id
+                        url
+                    }
+                    nickname
+                    facebookHandle
+                    twitterHandle
+                    instagramHandle
+                    shopWebsiteURL
+                    avatar {
+                        id
+                        url
+                    }
+                    stadium {
+                        id
+                        name
+                    }
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getTeamInfo = function(teamId, fn) {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getTeamInfo($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            ...teamInformationFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment teamInformationFragment on Team {
+                    id
+                    name
+                    abbreviation
+                    colors
+                    coach {
+                        name {
+                            givenName
+                            familyName
+                        }
+                    }
+                    wordmark {
+                        id
+                        url
+                    }
+                    nickname
+                    facebookHandle
+                    twitterHandle
+                    instagramHandle
+                    shopWebsiteURL
+                    avatar {
+                        id
+                        url
+                    }
+                    stadium {
+                        id
+                        name
+                        address {
+                            postalCode
+                            locality
+                            administrativeArea
+                            line1
+                            line2
+                            countryCode
+                        }
+                    }
+                    gamesConnection {
+                        edges {
+                            node {
+                                time
+                                awayTeam {
+                                    name
+                                    abbreviation
+                                }
+                                homeTeam {
+                                    name
+                                    abbreviation
+                                }
+                                status {
+                                    phase
+                                }
+                            }
+                        }
+                    }
+                    playersConnection(first: 100) {
+                        edges {
+                            node {
+                                name {
+                                    givenName
+                                    familyName
+                                }
+                                position
+                                jerseyNumber
+                            }
+                        }
+                    }
+                    seasonsConnection(last: 1) {
+                        edges {
+                            stats {
+                                gamesWon
+                                gamesLost
+                                gamesPlayed
+                                rushingPlays
+                                rushingYardsNet
+                                passingPlays
+                                passesAttempted
+                                passesCompleted
+                                passesIntercepted
+                                passingYardsNet
+                                passingYardsGross
+                                firstDownsByPassing
+                                firstDownsByPenalty
+                                firstDownsByRushing
+                                thirdDownsConverted
+                                thirdDownsUnconverted
+                                fourthDownsConverted
+                                fourthDownsUnconverted
+                                fumbles
+                                ownFumblesRecovered
+                                turnovers
+                                timesSacked
+                                sackYardsLost
+                                averageYardsPerPlay
+                                averagePointsPerGame
+                                averageTurnoversPerGame
+                                averageTimesSackedPerGame
+                                averagePassingYardsNetPerGame
+                                averageRushingYardsNetPerGame
+                                averageTimeOfPossessionPerGameMilliseconds
+                                timeOfPossessionMilliseconds
+                                twoPointConversionsAttempted
+                                twoPointConversionsCompleted
+                                twoPointConversionCompletionPercentage
+                                points
+                            }
+                        }
+                    }
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getGamesByTeam = function(teamId, fn) {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getGamesByTeam($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            ...teamInformationFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment teamInformationFragment on Team {
+                    id
+                    name
+                    abbreviation
+                    gamesConnection {
+                        edges {
+                            node {
+                                time
+                                awayTeam {
+                                    name
+                                    abbreviation
+                                }
+                                homeTeam {
+                                    name
+                                    abbreviation
+                                }
+                                status {
+                                    phase
+                                }
+                            }
+                        }
+                    }
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getPlayersByTeam = function(teamId, fn) {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getPlayersByTeam($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            ...teamInformationFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment teamInformationFragment on Team {
+                    id
+                    name
+                    abbreviation
+                    playersConnection(first: 500) {
+                        edges {
+                            node {
+                                name {
+                                    givenName
+                                    familyName
+                                }
+                                position
+                                jerseyNumber
+                            }
+                        }
+                    }
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getFullSeasonStatsByTeam($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            ...teamInformationFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment teamInformationFragment on Team {
+                    id
+                    name
+                    abbreviation
+                    seasonsConnection(last: 1) {
+                        edges {
+                            stats {
+                                gamesWon
+                                gamesLost
+                                gamesPlayed
+                                rushingPlays
+                                rushingYardsNet
+                                passingPlays
+                                passesAttempted
+                                passesCompleted
+                                passesIntercepted
+                                passingYardsNet
+                                passingYardsGross
+                                firstDownsByPassing
+                                firstDownsByPenalty
+                                firstDownsByRushing
+                                thirdDownsConverted
+                                thirdDownsUnconverted
+                                fourthDownsConverted
+                                fourthDownsUnconverted
+                                fumbles
+                                ownFumblesRecovered
+                                turnovers
+                                timesSacked
+                                sackYardsLost
+                                averageYardsPerPlay
+                                averagePointsPerGame
+                                averageTurnoversPerGame
+                                averageTimesSackedPerGame
+                                averagePassingYardsNetPerGame
+                                averageRushingYardsNetPerGame
+                                averageTimeOfPossessionPerGameMilliseconds
+                                timeOfPossessionMilliseconds
+                                twoPointConversionsAttempted
+                                twoPointConversionsCompleted
+                                twoPointConversionCompletionPercentage
+                                points
+                            }
+                        }
+                    }
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
 module.exports = aafApi;
