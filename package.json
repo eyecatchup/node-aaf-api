@@ -1,10 +1,10 @@
 {
   "name": "node-aaf-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "NodeJS wrapper for the AAF API.",
   "repository": {
-      "url": "https://github.com/eyecatchup/node-aaf-api",
-      "type": "git"
+    "url": "https://github.com/eyecatchup/node-aaf-api",
+    "type": "git"
   },
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,6 @@
   "author": "Stephan Schmitz",
   "license": "MIT",
   "dependencies": {
-      "request": "^2.81.0"
+    "request": "^2.81.0"
   }
 }
