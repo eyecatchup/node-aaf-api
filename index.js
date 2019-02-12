@@ -807,4 +807,103 @@ aafApi.getPlayersByTeam = function(teamId, fn) {
     postRequest(requestPayload, fn);
 };
 
+aafApi.getRosterByTeam = function(teamId, fn) {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getTeamRosterListQuery($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            id
+                            name
+                            offense: playersConnection(first: 100, platoon: OFFENSE) {
+                                nodes {
+                                    ...playerRosterFragment
+                                    __typename
+                                }
+                                __typename
+                            }
+                            defense: playersConnection(first: 100, platoon: DEFENSE) {
+                                nodes {
+                                    ...playerRosterFragment
+                                    __typename
+                                }
+                                __typename
+                            }
+                            specialTeams: playersConnection(first: 100, platoon: SPECIAL_TEAMS) {
+                                nodes {
+                                    ...playerRosterFragment
+                                    __typename
+                                }
+                                __typename
+                            }
+                            coachesConnection(first: 200) {
+                                nodes {
+                                    ...coachRosterFragment
+                                    __typename
+                                }
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment playerRosterFragment on Player {
+                    id
+                    name {
+                        familyName
+                        givenName
+                        __typename
+                    }
+                    position
+                    jerseyNumber
+                    heightMillimeters
+                    weightGrams
+                    avatar {
+                        id
+                        url
+                        __typename
+                    }
+                    schoolsConnection {
+                        nodes {
+                            ...schoolConnectionFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                    transactionsConnection(last: 1) {
+                        nodes {
+                            rosterStatus
+                            __typename
+                        }
+                        __typename
+                    }
+                    __typename
+                }
+
+                fragment schoolConnectionFragment on School {
+                    id
+                    name
+                    isNCAA
+                    abbreviation
+                    __typename
+                }
+
+                fragment coachRosterFragment on Coach {
+                    id
+                    name {
+                        familyName
+                        givenName
+                        __typename
+                    }
+                    title
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
 module.exports = aafApi;
