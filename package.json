@@ -1,18 +1,30 @@
 {
-  "name": "node-aaf-api",
-  "version": "0.0.5",
-  "description": "NodeJS wrapper for the AAF API.",
-  "repository": {
-    "url": "https://github.com/eyecatchup/node-aaf-api",
-    "type": "git"
-  },
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Stephan Schmitz",
-  "license": "MIT",
-  "dependencies": {
-    "request": "^2.81.0"
-  }
+    "name": "node-aaf-api",
+    "version": "0.0.7",
+    "description": "NodeJS wrapper for the AAF API.",
+    "homepage": "https://github.com/eyecatchup/node-aaf-api",
+    "repository": {
+        "url": "https://github.com/eyecatchup/node-aaf-api",
+        "type": "git"
+    },
+    "bugs": {
+        "url": "https://github.com/eyecatchup/node-aaf-api/issues"
+    },
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "Stephan Schmitz",
+        "url": "https://github.com/eyecatchup"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "request": "^2.81.0"
+    },
+    "keywords": [
+        "aaf",
+        "football",
+        "graphql"
+    ]
 }

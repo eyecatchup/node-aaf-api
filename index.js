@@ -421,4 +421,31 @@ aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
+aafApi.getPlayFeedByGame = function(gameId, fn) {
+    let requestPayload = {
+        variables: {
+            gameId: gameId
+        },
+        query: `query getPlayFeedByGame($gameId: ID!) {
+                    node(id: $gameId) {
+                        ... on Game {
+                            playsConnection(first: 1000) {
+                                nodes {
+                                    description
+                                    yardLine
+                                    yardsToGo
+                                    yardLineTeam
+                                    gameClockSeconds
+                                    quarter
+                                    time
+                                    possession
+                                }
+                            }
+                        }
+                    }
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
 module.exports = aafApi;

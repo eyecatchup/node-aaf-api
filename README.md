@@ -125,3 +125,17 @@ aafApi.getFullGameStatsByPlayer(gameId, function(error, response, body) {
     }
 });
 ```
+
+#### Get feed of game plays / live ticker (by gameId)
+
+```js
+let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
+
+aafApi.getPlayFeedByGame(gameId, function(error, response, body) {
+    if (error) {
+        throw new Error(error);
+    } else {
+        console.log(body.data.node.playsConnection.nodes);
+    }
+});
+```
