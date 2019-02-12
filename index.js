@@ -514,6 +514,42 @@ aafApi.getPlayFeedByGame = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
+aafApi.getTeams = function(fn) {
+    let requestPayload = {
+        operationName: 'getListOfTeamNameQuery',
+        variables: {},
+        query: `query getListOfTeamNameQuery {
+                    teamsConnection {
+                        nodes {
+                            id
+                            name
+                            abbreviation
+                            nickname
+                            colors
+                            logo {
+                                id
+                                url
+                                __typename
+                            }
+                            lightWordmark: wordmark(style: LIGHT_BACKGROUND) {
+                                id
+                                url
+                                __typename
+                            }
+                            darkWordmark: wordmark(style: DARK_BACKGROUND) {
+                                id
+                                url
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
 aafApi.getTeamInfoBasic = function(teamId, fn) {
     let requestPayload = {
         variables: {
