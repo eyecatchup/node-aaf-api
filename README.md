@@ -38,7 +38,7 @@ aafApi.query(customGraphqlQuery, function(error, response, body) {
 
 For convenience, some GraphQL queries are already wrapped:
 
-#### Get all scheduled season games
+#### Get all teams
 
 ```js
 aafApi.getTeams(function(error, response, body) {
