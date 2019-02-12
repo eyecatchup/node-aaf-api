@@ -89,7 +89,7 @@ aafApi.getGamesByDateRange = function(dateRange, fn) {
         variables: {
             'atOrAfterTime': dateRange.from,
             'beforeTime': dateRange.to,
-            'first': 20
+            'first': 50
         },
         query: `query getListOfGameQuery($first: Int, $atOrAfterTime: DateTime!, $beforeTime: DateTime!) {
                     gamesConnection(first: $first, atOrAfterTime: $atOrAfterTime, beforeTime: $beforeTime) {
@@ -299,6 +299,67 @@ aafApi.getLiveGameData = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
+aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
+    let requestPayload = {
+        variables: {
+            gameId: gameId
+        },
+        query: `query getFullGameStatsByPlayer($gameId: ID!) {
+                    node(id: $gameId) {
+                        ... on Game {
+                            playersConnection(first: 500) {
+                                edges {
+                                    node {
+                                        jerseyNumber
+                                        legalName {
+                                            familyName
+                                            givenName
+                                        }
+                                    }
+                                    team {
+                                        abbreviation
+                                    }
+                                    stats {
+                                        passesAttempted
+                                        passesCompleted
+                                        passingYards
+                                        passingTouchdowns
+                                        passesIntercepted
+                                        rushesAttempted
+                                        rushingYards
+                                        rushingTouchdowns
+                                        receptions
+                                        receivingYards
+                                        receivingTouchdowns
+                                        tackles
+                                        assistedTackles
+                                        tacklesForLoss
+                                        sacks
+                                        sackYardsGained
+                                        passDefenses
+                                        quarterbackHits
+                                        fumbles
+                                        fumblesRecovered
+                                        fieldGoalsMade
+                                        fieldGoalsBlocked
+                                        twoPointConversionPassReceptionsGood
+                                        miscellaneousTackles
+                                        miscellaneousTackleAssists
+                                        miscellaneousAssistedTackles
+                                        miscellaneousFumblesRecovered
+                                        miscellaneousOwnFumblesRecovered
+                                        miscellaneousOpponentFumblesForced
+                                        miscellaneousOpponentFumblesRecovered
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
 aafApi.getFullGameStatsByTeam = function(gameId, fn) {
     let requestPayload = {
         variables: {
@@ -360,62 +421,67 @@ aafApi.getFullGameStatsByTeam = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
+aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
     let requestPayload = {
         variables: {
-            gameId: gameId
+            teamId: teamId
         },
-        query: `query getFullGameStatsByPlayer($gameId: ID!) {
-                    node(id: $gameId) {
-                        ... on Game {
-                            playersConnection(first: 500) {
-                                edges {
-                                    node {
-                                        jerseyNumber
-                                        legalName {
-                                            familyName
-                                            givenName
-                                        }
-                                    }
-                                    team {
-                                        abbreviation
-                                    }
-                                    stats {
-                                        passesAttempted
-                                        passesCompleted
-                                        passingYards
-                                        passingTouchdowns
-                                        passesIntercepted
-                                        rushesAttempted
-                                        rushingYards
-                                        rushingTouchdowns
-                                        receptions
-                                        receivingYards
-                                        receivingTouchdowns
-                                        tackles
-                                        assistedTackles
-                                        tacklesForLoss
-                                        sacks
-                                        sackYardsGained
-                                        passDefenses
-                                        quarterbackHits
-                                        fumbles
-                                        fumblesRecovered
-                                        fieldGoalsMade
-                                        fieldGoalsBlocked
-                                        twoPointConversionPassReceptionsGood
-                                        miscellaneousTackles
-                                        miscellaneousTackleAssists
-                                        miscellaneousAssistedTackles
-                                        miscellaneousFumblesRecovered
-                                        miscellaneousOwnFumblesRecovered
-                                        miscellaneousOpponentFumblesForced
-                                        miscellaneousOpponentFumblesRecovered
-                                    }
-                                }
+        query: `query getFullSeasonStatsByTeam($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            ...teamInformationFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment teamInformationFragment on Team {
+                    id
+                    name
+                    abbreviation
+                    seasonsConnection(last: 1) {
+                        edges {
+                            stats {
+                                gamesWon
+                                gamesLost
+                                gamesPlayed
+                                rushingPlays
+                                rushingYardsNet
+                                passingPlays
+                                passesAttempted
+                                passesCompleted
+                                passesIntercepted
+                                passingYardsNet
+                                passingYardsGross
+                                firstDownsByPassing
+                                firstDownsByPenalty
+                                firstDownsByRushing
+                                thirdDownsConverted
+                                thirdDownsUnconverted
+                                fourthDownsConverted
+                                fourthDownsUnconverted
+                                fumbles
+                                ownFumblesRecovered
+                                turnovers
+                                timesSacked
+                                sackYardsLost
+                                averageYardsPerPlay
+                                averagePointsPerGame
+                                averageTurnoversPerGame
+                                averageTimesSackedPerGame
+                                averagePassingYardsNetPerGame
+                                averageRushingYardsNetPerGame
+                                averageTimeOfPossessionPerGameMilliseconds
+                                timeOfPossessionMilliseconds
+                                twoPointConversionsAttempted
+                                twoPointConversionsCompleted
+                                twoPointConversionCompletionPercentage
+                                points
                             }
                         }
                     }
+                    __typename
                 }`
     };
     postRequest(requestPayload, fn);
@@ -696,72 +762,6 @@ aafApi.getPlayersByTeam = function(teamId, fn) {
                                 }
                                 position
                                 jerseyNumber
-                            }
-                        }
-                    }
-                    __typename
-                }`
-    };
-    postRequest(requestPayload, fn);
-};
-
-aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
-    let requestPayload = {
-        variables: {
-            teamId: teamId
-        },
-        query: `query getFullSeasonStatsByTeam($teamId: ID!) {
-                    node(id: $teamId) {
-                        ... on Team {
-                            ...teamInformationFragment
-                            __typename
-                        }
-                        __typename
-                    }
-                }
-
-                fragment teamInformationFragment on Team {
-                    id
-                    name
-                    abbreviation
-                    seasonsConnection(last: 1) {
-                        edges {
-                            stats {
-                                gamesWon
-                                gamesLost
-                                gamesPlayed
-                                rushingPlays
-                                rushingYardsNet
-                                passingPlays
-                                passesAttempted
-                                passesCompleted
-                                passesIntercepted
-                                passingYardsNet
-                                passingYardsGross
-                                firstDownsByPassing
-                                firstDownsByPenalty
-                                firstDownsByRushing
-                                thirdDownsConverted
-                                thirdDownsUnconverted
-                                fourthDownsConverted
-                                fourthDownsUnconverted
-                                fumbles
-                                ownFumblesRecovered
-                                turnovers
-                                timesSacked
-                                sackYardsLost
-                                averageYardsPerPlay
-                                averagePointsPerGame
-                                averageTurnoversPerGame
-                                averageTimesSackedPerGame
-                                averagePassingYardsNetPerGame
-                                averageRushingYardsNetPerGame
-                                averageTimeOfPossessionPerGameMilliseconds
-                                timeOfPossessionMilliseconds
-                                twoPointConversionsAttempted
-                                twoPointConversionsCompleted
-                                twoPointConversionCompletionPercentage
-                                points
                             }
                         }
                     }
