@@ -792,6 +792,7 @@ aafApi.getPlayersByTeam = function(teamId, fn) {
                     playersConnection(first: 500) {
                         edges {
                             node {
+                                id
                                 name {
                                     givenName
                                     familyName
