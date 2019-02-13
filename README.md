@@ -8,18 +8,20 @@
 npm i node-aaf-api
 ```
 
-## Use / Examples
+## Examples
+
+You can find several examples in the examples directory. To run them, use (for example):
+
+```sh
+node examples/getFullSeasonStatsByTeam.js
+```
+
+## Use
 
 Require `node-aaf-api`:
 
 ```js
 const aafApi = require('node-aaf-api');
-```
-
-You can find examples in the examples directory. To run them, use (for example):
-
-```sh
-node examples/getFullSeasonStatsByTeam.js
 ```
 
 ### Custom queries
