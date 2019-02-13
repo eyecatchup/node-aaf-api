@@ -1,7 +1,7 @@
 const aafApi = require('../');
 
-let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
-aafApi.getFullGameStatsByTeam(gameId, (error, response, body) => {
+let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
+aafApi.getFullSeasonStatsByTeamByPlayer(teamId, (error, response, body) => {
     if (error) {
         throw new Error(error);
     } else {

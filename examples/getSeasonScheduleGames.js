@@ -1,6 +1,6 @@
 const aafApi = require('../');
 
-aafApi.getSeasonScheduleGames(function(error, response, body) {
+aafApi.getSeasonScheduleGames((error, response, body) => {
     if (error) {
         throw new Error(error);
     } else {

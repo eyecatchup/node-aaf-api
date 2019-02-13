@@ -2,7 +2,7 @@ const request = require('request');
 
 let aafApi = {};
 
-const postRequest = function(data, fn) {
+const postRequest = (data, fn) => {
     let options = {
         method: 'POST',
         url: 'https://api.platform.aaf.com/v1/graphql',
@@ -18,11 +18,11 @@ const postRequest = function(data, fn) {
     request(options, fn);
 };
 
-aafApi.query = function(requestPayload, fn) {
+aafApi.query = (requestPayload, fn) => {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getSeasonScheduleGames = function(fn) {
+aafApi.getSeasonScheduleGames = (fn) => {
     let requestPayload = {
         operationName: 'getSeasonScheduleGamesQuery',
         variables: {},
@@ -83,7 +83,7 @@ aafApi.getSeasonScheduleGames = function(fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getGamesByDateRange = function(dateRange, fn) {
+aafApi.getGamesByDateRange = (dateRange, fn) => {
     let requestPayload = {
         operationName: 'getListOfGameQuery',
         variables: {
@@ -161,7 +161,7 @@ aafApi.getGamesByDateRange = function(dateRange, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getLiveGamesByDateRange = function(dateRange, fn) {
+aafApi.getLiveGamesByDateRange = (dateRange, fn) => {
     let requestPayload = {
         operationName: 'getListOfLiveGameQuery',
         variables: {
@@ -211,7 +211,7 @@ aafApi.getLiveGamesByDateRange = function(dateRange, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getLiveGameData = function(gameId, fn) {
+aafApi.getLiveGameData = (gameId, fn) => {
     let requestPayload = {
         operationName: 'getLiveGameDataQuery',
         variables: {
@@ -299,7 +299,7 @@ aafApi.getLiveGameData = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
+aafApi.getFullGameStatsByPlayer = (gameId, fn) => {
     let requestPayload = {
         variables: {
             gameId: gameId
@@ -315,41 +315,65 @@ aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
                                             familyName
                                             givenName
                                         }
+                                        position
                                     }
                                     team {
                                         abbreviation
                                     }
                                     stats {
-                                        passesAttempted
-                                        passesCompleted
-                                        passingYards
-                                        passingTouchdowns
-                                        passesIntercepted
-                                        rushesAttempted
-                                        rushingYards
-                                        rushingTouchdowns
-                                        receptions
-                                        receivingYards
-                                        receivingTouchdowns
-                                        tackles
                                         assistedTackles
-                                        tacklesForLoss
-                                        sacks
-                                        sackYardsGained
-                                        passDefenses
-                                        quarterbackHits
+                                        fieldGoalsAttempted
+                                        fieldGoalsBlocked
+                                        fieldGoalsLongestMade
+                                        fieldGoalsMade
                                         fumbles
                                         fumblesRecovered
-                                        fieldGoalsMade
-                                        fieldGoalsBlocked
-                                        twoPointConversionPassReceptionsGood
-                                        miscellaneousTackles
-                                        miscellaneousTackleAssists
+                                        gamesPlayed
+                                        interceptionReturns
                                         miscellaneousAssistedTackles
                                         miscellaneousFumblesRecovered
-                                        miscellaneousOwnFumblesRecovered
                                         miscellaneousOpponentFumblesForced
                                         miscellaneousOpponentFumblesRecovered
+                                        miscellaneousOwnFumblesRecovered
+                                        miscellaneousTackleAssists
+                                        miscellaneousTackles
+                                        opponentFumblesForced
+                                        opponentFumblesRecovered
+                                        opposingFieldGoalsBlocked
+                                        ownFumblesRecovered
+                                        passDefenses
+                                        passesAttempted
+                                        passesCompleted
+                                        passesIntercepted
+                                        passingTouchdowns
+                                        passingYards
+                                        puntingLongestKick
+                                        puntingYards
+                                        puntingYardsNet
+                                        puntsAttempted
+                                        quarterbackHits
+                                        receivingLongestGain
+                                        receivingTouchdowns
+                                        receivingYards
+                                        receptions
+                                        rushesAttempted
+                                        rushingLongestGain
+                                        rushingTouchdowns
+                                        rushingYards
+                                        sackYardsGained
+                                        sacks
+                                        specialTeamsAssistedTackles
+                                        specialTeamsFumblesRecovered
+                                        specialTeamsOpponentFumblesForced
+                                        specialTeamsOpponentFumblesRecovered
+                                        specialTeamsOwnFumblesRecovered
+                                        specialTeamsTackleAssists
+                                        specialTeamsTackles
+                                        tackleAssists
+                                        tackles
+                                        tacklesForLoss
+                                        timesSacked
+                                        twoPointConversionsCompleted
                                     }
                                 }
                             }
@@ -360,7 +384,7 @@ aafApi.getFullGameStatsByPlayer = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getFullGameStatsByTeam = function(gameId, fn) {
+aafApi.getFullGameStatsByTeam = (gameId, fn) => {
     let requestPayload = {
         variables: {
             gameId: gameId
@@ -383,6 +407,7 @@ aafApi.getFullGameStatsByTeam = function(gameId, fn) {
                         gamesWon
                         gamesLost
                         gamesPlayed
+                        points
                         rushingPlays
                         rushingYardsNet
                         passingPlays
@@ -414,14 +439,14 @@ aafApi.getFullGameStatsByTeam = function(gameId, fn) {
                         twoPointConversionsAttempted
                         twoPointConversionsCompleted
                         twoPointConversionCompletionPercentage
-                        points
+                        interceptionReturns
                     }
                 }`
     };
     postRequest(requestPayload, fn);
 };
 
-aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
+aafApi.getFullSeasonStatsByTeam = (teamId, fn) => {
     let requestPayload = {
         variables: {
             teamId: teamId
@@ -446,6 +471,7 @@ aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
                                 gamesWon
                                 gamesLost
                                 gamesPlayed
+                                points
                                 rushingPlays
                                 rushingYardsNet
                                 passingPlays
@@ -477,7 +503,7 @@ aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
                                 twoPointConversionsAttempted
                                 twoPointConversionsCompleted
                                 twoPointConversionCompletionPercentage
-                                points
+                                interceptionReturns
                             }
                         }
                     }
@@ -487,7 +513,162 @@ aafApi.getFullSeasonStatsByTeam = function(teamId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getPlayFeedByGame = function(gameId, fn) {
+aafApi.getFullSeasonStatsByTeamByPlayer = (teamId, fn) => {
+    let requestPayload = {
+        variables: {
+            teamId: teamId
+        },
+        query: `query getTeamPlayersSeasonStats($teamId: ID!) {
+                    node(id: $teamId) {
+                        ... on Team {
+                            id
+                            name
+                            nickname
+                            abbreviation
+                            colors
+                            logo {
+                                id
+                                url
+                                __typename
+                            }
+                            wordmark(style: LIGHT_BACKGROUND) {
+                                id
+                                url
+                                __typename
+                            }
+                            seasonsConnection(last: 1) {
+                                edges {
+                                    stats {
+                                        passingYardsGross
+                                        passingYardsNet
+                                        rushingYardsNet
+                                        gamesWon
+                                        gamesLost
+                                        gamesPlayed
+                                        __typename
+                                    }
+                                    __typename
+                                }
+                                __typename
+                            }
+                            playersConnection(first: 1000) {
+                                nodes {
+                                    ...playerConnectionFragment
+                                    seasonsConnection(last: 1) {
+                                        edges {
+                                            stats {
+                                                ...playerStats
+                                                __typename
+                                            }
+                                            __typename
+                                        }
+                                        __typename
+                                    }
+                                    __typename
+                                }
+                                __typename
+                            }
+                            __typename
+                        }
+                        __typename
+                    }
+                }
+
+                fragment playerConnectionFragment on Player {
+                    id
+                    jerseyNumber
+                    heightMillimeters
+                    weightGrams
+                    name {
+                        familyName
+                        givenName
+                        __typename
+                    }
+                    position
+                    avatar {
+                        id
+                        url
+                        __typename
+                    }
+                    schoolsConnection {
+                        nodes {
+                            ...schoolConnectionFragment
+                            __typename
+                        }
+                        __typename
+                    }
+                    __typename
+                }
+
+                fragment schoolConnectionFragment on School {
+                    id
+                    name
+                    isNCAA
+                    abbreviation
+                    __typename
+                }
+
+                fragment playerStats on PlayerStats {
+                    assistedTackles
+                    fieldGoalsAttempted
+                    fieldGoalsBlocked
+                    fieldGoalsLongestMade
+                    fieldGoalsMade
+                    fumbles
+                    fumblesRecovered
+                    gamesPlayed
+                    interceptionReturns
+                    miscellaneousAssistedTackles
+                    miscellaneousFumblesRecovered
+                    miscellaneousOpponentFumblesForced
+                    miscellaneousOpponentFumblesRecovered
+                    miscellaneousOwnFumblesRecovered
+                    miscellaneousTackleAssists
+                    miscellaneousTackles
+                    opponentFumblesForced
+                    opponentFumblesRecovered
+                    opposingFieldGoalsBlocked
+                    ownFumblesRecovered
+                    passDefenses
+                    passesAttempted
+                    passesCompleted
+                    passesIntercepted
+                    passingTouchdowns
+                    passingYards
+                    puntingLongestKick
+                    puntingYards
+                    puntingYardsNet
+                    puntsAttempted
+                    quarterbackHits
+                    receivingLongestGain
+                    receivingTouchdowns
+                    receivingYards
+                    receptions
+                    rushesAttempted
+                    rushingLongestGain
+                    rushingTouchdowns
+                    rushingYards
+                    sackYardsGained
+                    sacks
+                    specialTeamsAssistedTackles
+                    specialTeamsFumblesRecovered
+                    specialTeamsOpponentFumblesForced
+                    specialTeamsOpponentFumblesRecovered
+                    specialTeamsOwnFumblesRecovered
+                    specialTeamsTackleAssists
+                    specialTeamsTackles
+                    tackleAssists
+                    tackles
+                    tacklesForLoss
+                    timesSacked
+                    twoPointConversionsCompleted
+                    __typename
+                }`
+    };
+    postRequest(requestPayload, fn);
+};
+
+aafApi.getPlayFeedByGame = (gameId, fn) => {
     let requestPayload = {
         variables: {
             gameId: gameId
@@ -514,7 +695,7 @@ aafApi.getPlayFeedByGame = function(gameId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getTeams = function(fn) {
+aafApi.getTeams = (fn) => {
     let requestPayload = {
         operationName: 'getListOfTeamNameQuery',
         variables: {},
@@ -550,7 +731,7 @@ aafApi.getTeams = function(fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getTeamInfoBasic = function(teamId, fn) {
+aafApi.getTeamInfoBasic = (teamId, fn) => {
     let requestPayload = {
         variables: {
             teamId: teamId
@@ -599,7 +780,7 @@ aafApi.getTeamInfoBasic = function(teamId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getTeamInfo = function(teamId, fn) {
+aafApi.getTeamInfo = (teamId, fn) => {
     let requestPayload = {
         variables: {
             teamId: teamId
@@ -727,7 +908,7 @@ aafApi.getTeamInfo = function(teamId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getGamesByTeam = function(teamId, fn) {
+aafApi.getGamesByTeam = (teamId, fn) => {
     let requestPayload = {
         variables: {
             teamId: teamId
@@ -770,7 +951,7 @@ aafApi.getGamesByTeam = function(teamId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getPlayersByTeam = function(teamId, fn) {
+aafApi.getPlayersByTeam = (teamId, fn) => {
     let requestPayload = {
         variables: {
             teamId: teamId
@@ -808,7 +989,7 @@ aafApi.getPlayersByTeam = function(teamId, fn) {
     postRequest(requestPayload, fn);
 };
 
-aafApi.getRosterByTeam = function(teamId, fn) {
+aafApi.getRosterByTeam = (teamId, fn) => {
     let requestPayload = {
         variables: {
             teamId: teamId

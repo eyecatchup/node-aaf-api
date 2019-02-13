@@ -27,7 +27,7 @@ let requestPayload = {
 // let requestPayload = {
 //     query: '{teamsConnection {nodes {playersConnection(position: QUARTERBACK) {nodes {name {givenName familyName}}}}}}'
 // };
-aafApi.query(requestPayload, function(error, response, body) {
+aafApi.query(requestPayload, (error, response, body) => {
     if (error) {
         throw new Error(error);
     } else {

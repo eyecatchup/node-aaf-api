@@ -1,6 +1,6 @@
 const aafApi = require('../');
 
-aafApi.getTeams(function(error, response, body) {
+aafApi.getTeams((error, response, body) => {
     if (error) {
         throw new Error(error);
     } else {

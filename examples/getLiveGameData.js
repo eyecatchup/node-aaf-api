@@ -1,7 +1,7 @@
 const aafApi = require('../');
 
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
-aafApi.getLiveGameData(gameId, function(error, response, body) {
+aafApi.getLiveGameData(gameId, (error, response, body) => {
     if (error) {
         throw new Error(error);
     } else {
