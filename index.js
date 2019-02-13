@@ -15,7 +15,12 @@ const postRequest = (data, fn) => {
         body: data
     };
 
-    request(options, fn);
+    request(options, (error, response, body) => {
+        fn({
+            status: !error ? 'success' : 'error',
+            data: !error ? !body.data ? null : body.data : error
+        });
+    });
 };
 
 aafApi.query = (requestPayload, fn) => {

@@ -29,13 +29,21 @@ const aafApi = require('node-aaf-api');
 If you want to send your custom GraphQL queries, use the `query` function:
 
 ```js
-let customGraphqlQuery = {
+// Get all Quarterbacks, grouped by team
+let requestPayload = {
     query: `{
-              node(id: "Gid2AorIFgJgIqqgIphAWXYkSJWF") {
-                ... on Game {
-                  playsConnection(first: 1000) {
+              teamsConnection {
+                nodes {
+                  id
+                  name
+                  abbreviation
+                  playersConnection(position: QUARTERBACK) {
                     nodes {
-                      description
+                      id
+                      name {
+                        givenName
+                        familyName
+                      }
                     }
                   }
                 }
@@ -43,16 +51,14 @@ let customGraphqlQuery = {
             }`
 };
 
-aafApi.query(customGraphqlQuery, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.query(customGraphqlQuery, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data);
+        console.log(response.data);
     }
 });
 ```
-
-The response is a [`request` response](https://www.npmjs.com/package/request#super-simple-to-use).
 
 ### Predefined queries
 
@@ -61,11 +67,11 @@ For convenience, some common GraphQL queries - like getting game, team or player
 #### Get all teams
 
 ```js
-aafApi.getTeams((error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getTeams((response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.teamsConnection.nodes);
+        console.log(response.data);
     }
 });
 ```
@@ -75,11 +81,11 @@ aafApi.getTeams((error, response, body) => {
 #### Get all scheduled season games
 
 ```js
-aafApi.getSeasonScheduleGames((error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getSeasonScheduleGames((response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.seasonsConnection.nodes[0].gamesConnection.nodes);
+        console.log(response.data);
     }
 });
 ```
@@ -94,11 +100,11 @@ let dateRange = {
     to: '2019-02-11T02:26:28.507Z'
 };
 
-aafApi.getGamesByDateRange(dateRange, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getGamesByDateRange(dateRange, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.gamesConnection.nodes);
+        console.log(response.data);
     }
 });
 ```
@@ -113,11 +119,11 @@ let dateRange = {
     to: '2019-02-11T02:26:28.507Z'
 };
 
-aafApi.getLiveGamesByDateRange(dateRange, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getLiveGamesByDateRange(dateRange, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.gamesConnection.nodes);
+        console.log(response.data);
     }
 });
 ```
@@ -127,11 +133,11 @@ aafApi.getLiveGamesByDateRange(dateRange, (error, response, body) => {
 ```js
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
 
-aafApi.getLiveGameData(gameId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getLiveGameData(gameId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -141,11 +147,11 @@ aafApi.getLiveGameData(gameId, (error, response, body) => {
 ```js
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
 
-aafApi.getPlayFeedByGame(gameId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getPlayFeedByGame(gameId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node.playsConnection.nodes);
+        console.log(response.data);
     }
 });
 ```
@@ -157,11 +163,11 @@ aafApi.getPlayFeedByGame(gameId, (error, response, body) => {
 ```js
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
 
-aafApi.getFullGameStatsByPlayer(gameId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getFullGameStatsByPlayer(gameId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node.playersConnection.edges);
+        console.log(response.data);
     }
 });
 ```
@@ -173,11 +179,11 @@ aafApi.getFullGameStatsByPlayer(gameId, (error, response, body) => {
 ```js
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
 
-aafApi.getFullGameStatsByTeam(gameId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getFullGameStatsByTeam(gameId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -189,11 +195,11 @@ aafApi.getFullGameStatsByTeam(gameId, (error, response, body) => {
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getFullSeasonStatsByTeam(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getFullSeasonStatsByTeam(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -205,11 +211,11 @@ aafApi.getFullSeasonStatsByTeam(teamId, (error, response, body) => {
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getFullSeasonStatsByTeamByPlayer(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getFullSeasonStatsByTeamByPlayer(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -223,11 +229,11 @@ _No season stats, player & game infos included_
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getTeamInfoBasic(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getTeamInfoBasic(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -241,11 +247,11 @@ _Incl. season stats, player & game infos_
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getTeamInfo(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getTeamInfo(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -257,11 +263,11 @@ aafApi.getTeamInfo(teamId, (error, response, body) => {
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getGamesByTeam(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getGamesByTeam(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -275,11 +281,11 @@ _Grouped by offense, defense, special teams & coaches_
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getRosterByTeam(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getRosterByTeam(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```
@@ -293,11 +299,11 @@ _Not grouped (unlike getRosterByTeam) + no coaching stuff included. Just a simpl
 ```js
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
 
-aafApi.getPlayersByTeam(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getPlayersByTeam(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data);
     }
 });
 ```

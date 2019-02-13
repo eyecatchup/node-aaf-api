@@ -1,36 +1,31 @@
 const aafApi = require('../');
 
-// Get game ticker
+// Get all Quarterbacks, grouped by team
 let requestPayload = {
     query: `{
-      node(id: "Gjm5E9bwm9-ZIwVYJqIG6cvI2Ner") {
-        ... on Game {
-          homeTeamEdge {
-            ...teamEdge
-          }
-          awayTeamEdge {
-            ...teamEdge
-          }
-        }
-      }
-    }
-
-    fragment teamEdge on GameTeamEdge {
-      stats {
-        passingPlays
-        rushingPlays
-      }
-    }`
+              teamsConnection {
+                nodes {
+                  id
+                  name
+                  abbreviation
+                  playersConnection(position: QUARTERBACK) {
+                    nodes {
+                      id
+                      name {
+                        givenName
+                        familyName
+                      }
+                    }
+                  }
+                }
+              }
+            }`
 };
 
-// Get all Quarterbacks
-// let requestPayload = {
-//     query: '{teamsConnection {nodes {playersConnection(position: QUARTERBACK) {nodes {name {givenName familyName}}}}}}'
-// };
-aafApi.query(requestPayload, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.query(requestPayload, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data);
+        console.log(response.data.teamsConnection.nodes);
     }
 });

@@ -4,10 +4,11 @@ let dateRange = {
     from: '2019-03-01T14:26:28.507Z',
     to: '2019-03-31T02:26:28.507Z'
 };
-aafApi.getLiveGamesByDateRange(dateRange, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+
+aafApi.getLiveGamesByDateRange(dateRange, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.gamesConnection.nodes);
+        console.log(response.data.gamesConnection.nodes);
     }
 });

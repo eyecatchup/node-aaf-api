@@ -1,10 +1,11 @@
 const aafApi = require('../');
 
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
-aafApi.getLiveGameData(gameId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+
+aafApi.getLiveGameData(gameId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data.node);
     }
 });

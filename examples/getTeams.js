@@ -1,9 +1,9 @@
 const aafApi = require('../');
 
-aafApi.getTeams((error, response, body) => {
-    if (error) {
-        throw new Error(error);
+aafApi.getTeams((response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.teamsConnection.nodes);
+        console.log(response.data.teamsConnection.nodes);
     }
 });

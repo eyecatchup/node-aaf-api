@@ -1,10 +1,11 @@
 const aafApi = require('../');
 
 let gameId = 'GjoCxWXQfvKpZuFlqeOgB5I-ceJn';
-aafApi.getFullGameStatsByPlayer(gameId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+
+aafApi.getFullGameStatsByPlayer(gameId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node.playersConnection.edges);
+        console.log(response.data.node.playersConnection.edges);
     }
 });

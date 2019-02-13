@@ -1,10 +1,11 @@
 const aafApi = require('../');
 
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
-aafApi.getFullSeasonStatsByTeamByPlayer(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+
+aafApi.getFullSeasonStatsByTeamByPlayer(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data.node);
     }
 });

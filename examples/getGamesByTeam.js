@@ -1,10 +1,11 @@
 const aafApi = require('../');
 
 let teamId = 'DKY1420EnDNa1FwBlyC8sAV_1ft6';
-aafApi.getGamesByTeam(teamId, (error, response, body) => {
-    if (error) {
-        throw new Error(error);
+
+aafApi.getGamesByTeam(teamId, (response) => {
+    if (response.status === 'error') {
+        throw new Error(response.data);
     } else {
-        console.log(body.data.node);
+        console.log(response.data.node);
     }
 });
