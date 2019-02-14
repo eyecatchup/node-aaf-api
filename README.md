@@ -51,7 +51,7 @@ let requestPayload = {
             }`
 };
 
-aafApi.query(customGraphqlQuery, (response) => {
+aafApi.query(requestPayload, (response) => {
     if (response.status === 'error') {
         throw new Error(response.data);
     } else {
