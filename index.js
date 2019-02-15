@@ -935,17 +935,25 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                     gamesConnection {
                         edges {
                             node {
+                                __typename
                                 time
                                 awayTeam {
+                                    id
                                     name
                                     abbreviation
                                 }
                                 homeTeam {
+                                    id
                                     name
                                     abbreviation
                                 }
+                                subseason
                                 status {
                                     phase
+                                }
+                                stadium {
+                                    id
+                                    name
                                 }
                             }
                         }
