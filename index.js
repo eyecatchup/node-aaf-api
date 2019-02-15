@@ -32,19 +32,18 @@ aafApi.getSeasonScheduleGames = (fn) => {
         operationName: 'getSeasonScheduleGamesQuery',
         variables: {},
         query: `query getSeasonScheduleGamesQuery {
-                    seasonsConnection(last: 1) {
+                    seasons: seasonsConnection(last: 1) {
                         nodes {
                             id
+                            name
                             gamesConnection(first: 60) {
                                 nodes {
                                     ...seasonGameFragment
                                     __typename
                                 }
-                                __typename
                             }
                             __typename
                         }
-                        __typename
                     }
                 }
 
@@ -58,10 +57,12 @@ aafApi.getSeasonScheduleGames = (fn) => {
                         regionName
                         abbreviation
                         name
-                        wordmark(style: LIGHT_BACKGROUND) {
+                        division {
                             id
+                            name
+                        }
+                        logo {
                             url
-                            __typename
                         }
                         __typename
                     }
@@ -70,17 +71,18 @@ aafApi.getSeasonScheduleGames = (fn) => {
                         regionName
                         abbreviation
                         name
-                        wordmark(style: LIGHT_BACKGROUND) {
+                        division {
                             id
+                            name
+                        }
+                        logo {
                             url
-                            __typename
                         }
                         __typename
                     }
                     stadium {
                         id
                         name
-                        __typename
                     }
                     __typename
                 }`
@@ -755,34 +757,39 @@ aafApi.getPlayFeedByGame = (gameId, fn) => {
 
 aafApi.getTeams = (fn) => {
     let requestPayload = {
-        operationName: 'getListOfTeamNameQuery',
+        operationName: 'getListOfTeamsQuery',
         variables: {},
-        query: `query getListOfTeamNameQuery {
-                    teamsConnection {
+        query: `query getListOfTeamsQuery {
+                    teams: teamsConnection {
                         nodes {
                             id
                             name
                             abbreviation
                             nickname
+                            division {
+                                id
+                                name
+                            }
                             colors
                             logo {
-                                id
                                 url
-                                __typename
                             }
                             lightWordmark: wordmark(style: LIGHT_BACKGROUND) {
-                                id
                                 url
-                                __typename
                             }
                             darkWordmark: wordmark(style: DARK_BACKGROUND) {
-                                id
                                 url
-                                __typename
                             }
+                            stadium {
+                                id
+                                name
+                            }
+                            facebookHandle
+                            instagramHandle
+                            twitterHandle
+                            shopWebsiteURL
                             __typename
                         }
-                        __typename
                     }
                 }`
     };
