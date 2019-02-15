@@ -762,6 +762,7 @@ aafApi.getTeams = (fn) => {
         query: `query getListOfTeamsQuery {
                     teams: teamsConnection {
                         nodes {
+                            __typename
                             id
                             name
                             abbreviation
@@ -788,7 +789,15 @@ aafApi.getTeams = (fn) => {
                             instagramHandle
                             twitterHandle
                             shopWebsiteURL
-                            __typename
+                            seasonRecord: seasonsConnection(last: 1) {
+                                edges {
+                                    stats {
+                                        gamesWon
+                                        gamesLost
+                                        gamesPlayed
+                                    }
+                                }
+                            }
                         }
                     }
                 }`
