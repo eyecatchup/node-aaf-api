@@ -1,6 +1,6 @@
 {
     "name": "node-aaf-api",
-    "version": "0.0.20",
+    "version": "0.0.21",
     "description": "NodeJS wrapper for the AAF API.",
     "homepage": "https://github.com/eyecatchup/node-aaf-api",
     "repository": {

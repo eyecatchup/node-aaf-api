@@ -312,13 +312,32 @@ aafApi.getFullGameStatsByPlayer = (gameId, fn) => {
         query: `query getFullGameStatsByPlayer($gameId: ID!) {
                     node(id: $gameId) {
                         ... on Game {
+                            __typename
+                            id
+                            homeTeam {
+                                id
+                                name
+                                abbreviation
+                            }
+                            awayTeam {
+                                id
+                                name
+                                abbreviation
+                            }
+                            status {
+                                phase
+                            }
                             playersConnection(first: 500) {
                                 edges {
                                     node {
+                                        id
                                         jerseyNumber
                                         legalName {
                                             familyName
                                             givenName
+                                        }
+                                        avatar {
+                                            url
                                         }
                                         position
                                     }
@@ -397,14 +416,29 @@ aafApi.getFullGameStatsByTeam = (gameId, fn) => {
         query: `query getFullGameStatsByTeam($gameId: ID!) {
                     node(id: $gameId) {
                         ... on Game {
+                            __typename
+                            id
+                            homeTeam {
+                                ...team
+                            }
                             homeTeamEdge {
                                 ...teamEdge
+                            }
+                            awayTeam {
+                                ...team
                             }
                             awayTeamEdge {
                                 ...teamEdge
                             }
                         }
                     }
+                }
+
+                fragment team on Team {
+                    id
+                    name
+                    nickname
+                    abbreviation
                 }
 
                 fragment teamEdge on GameTeamEdge {
@@ -434,11 +468,6 @@ aafApi.getFullGameStatsByTeam = (gameId, fn) => {
                         timesSacked
                         sackYardsLost
                         averageYardsPerPlay
-                        averagePointsPerGame
-                        averageTurnoversPerGame
-                        averageTimesSackedPerGame
-                        averagePassingYardsNetPerGame
-                        averageRushingYardsNetPerGame
                         averageTimeOfPossessionPerGameMilliseconds
                         timeOfPossessionMilliseconds
                         twoPointConversionsAttempted
@@ -936,6 +965,7 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                         edges {
                             node {
                                 __typename
+                                id
                                 time
                                 awayTeam {
                                     id
