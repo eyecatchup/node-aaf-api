@@ -990,16 +990,26 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                             node {
                                 __typename
                                 id
+                                availability {
+                                    shortName
+                                    url
+                                }
                                 time
+                                awayTeamEdge {
+                                    stats {
+                                        points
+                                    }
+                                }
                                 awayTeam {
-                                    id
-                                    name
-                                    abbreviation
+                                    ...team
+                                }
+                                homeTeamEdge {
+                                    stats {
+                                        points
+                                    }
                                 }
                                 homeTeam {
-                                    id
-                                    name
-                                    abbreviation
+                                    ...team
                                 }
                                 subseason
                                 status {
@@ -1013,6 +1023,21 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                         }
                     }
                     __typename
+                }
+
+                fragment team on Team {
+                    id
+                    name
+                    abbreviation
+                    seasonsConnection(last: 1) {
+                        edges {
+                            stats {
+                                gamesWon
+                                gamesLost
+                                gamesPlayed
+                            }
+                        }
+                    }
                 }`
     };
     postRequest(requestPayload, fn);
@@ -1037,16 +1062,22 @@ aafApi.getPlayersByTeam = (teamId, fn) => {
                     id
                     name
                     abbreviation
-                    playersConnection(first: 500) {
+                    players: playersConnection(first: 500) {
                         edges {
                             node {
                                 id
+                                avatar {
+                                    url
+                                }
                                 name {
                                     givenName
                                     familyName
                                 }
+                                platoon
                                 position
                                 jerseyNumber
+                                heightMillimeters
+                                weightGrams
                             }
                         }
                     }
@@ -1065,34 +1096,31 @@ aafApi.getRosterByTeam = (teamId, fn) => {
                     node(id: $teamId) {
                         ... on Team {
                             id
+                            abbreviation
                             name
                             offense: playersConnection(first: 100, platoon: OFFENSE) {
                                 nodes {
                                     ...playerRosterFragment
                                     __typename
                                 }
-                                __typename
                             }
                             defense: playersConnection(first: 100, platoon: DEFENSE) {
                                 nodes {
                                     ...playerRosterFragment
                                     __typename
                                 }
-                                __typename
                             }
                             specialTeams: playersConnection(first: 100, platoon: SPECIAL_TEAMS) {
                                 nodes {
                                     ...playerRosterFragment
                                     __typename
                                 }
-                                __typename
                             }
-                            coachesConnection(first: 200) {
+                            coaches: coachesConnection(first: 200) {
                                 nodes {
                                     ...coachRosterFragment
                                     __typename
                                 }
-                                __typename
                             }
                             __typename
                         }
@@ -1105,30 +1133,26 @@ aafApi.getRosterByTeam = (teamId, fn) => {
                     name {
                         familyName
                         givenName
-                        __typename
                     }
+                    platoon
                     position
                     jerseyNumber
                     heightMillimeters
                     weightGrams
                     avatar {
-                        id
                         url
-                        __typename
                     }
-                    schoolsConnection {
+                    school: schoolsConnection {
                         nodes {
                             ...schoolConnectionFragment
                             __typename
                         }
-                        __typename
                     }
-                    transactionsConnection(last: 1) {
+                    transactions: transactionsConnection(last: 1) {
                         nodes {
                             rosterStatus
                             __typename
                         }
-                        __typename
                     }
                     __typename
                 }
@@ -1143,10 +1167,12 @@ aafApi.getRosterByTeam = (teamId, fn) => {
 
                 fragment coachRosterFragment on Coach {
                     id
+                    avatar {
+                        url
+                    }
                     name {
                         familyName
                         givenName
-                        __typename
                     }
                     title
                     __typename
