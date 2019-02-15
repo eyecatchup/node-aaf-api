@@ -712,18 +712,27 @@ aafApi.getPlayFeedByGame = (gameId, fn) => {
                         ... on Game {
                             playsConnection(first: 1000) {
                                 nodes {
-                                    description
-                                    yardLine
-                                    yardsToGo
-                                    yardLineTeam
-                                    gameClockSeconds
-                                    quarter
-                                    time
-                                    possession
+                                    ...liveGamePlayFragment
                                 }
                             }
                         }
                     }
+                }
+
+                fragment liveGamePlayFragment on Play {
+                    time
+                    description
+                    isComplete
+                    down
+                    yardsToGo
+                    isConversion
+                    gameClockSeconds
+                    possession
+                    quarter
+                    yardLineTeam
+                    yardLine
+                    sequence
+                    __typename
                 }`
     };
     postRequest(requestPayload, fn);
