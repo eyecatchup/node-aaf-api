@@ -53,36 +53,39 @@ aafApi.getSeasonScheduleGames = (fn) => {
                     subseason
                     time
                     awayTeam {
-                        id
-                        regionName
-                        abbreviation
-                        name
-                        division {
-                            id
-                            name
-                        }
-                        logo {
-                            url
-                        }
-                        __typename
+                        ...team
                     }
                     homeTeam {
-                        id
-                        regionName
-                        abbreviation
-                        name
-                        division {
-                            id
-                            name
-                        }
-                        logo {
-                            url
-                        }
-                        __typename
+                        ...team
                     }
                     stadium {
                         id
                         name
+                    }
+                    __typename
+                }
+
+                fragment team on Team {
+                    id
+                    name
+                    nickname
+                    regionName
+                    abbreviation
+                    logo {
+                        url
+                    }
+                    division {
+                        id
+                        name
+                    }
+                    seasonRecord: seasonsConnection(last: 1) {
+                        edges {
+                            stats {
+                                gamesWon
+                                gamesLost
+                                gamesPlayed
+                            }
+                        }
                     }
                     __typename
                 }`
