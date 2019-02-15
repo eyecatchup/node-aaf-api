@@ -710,6 +710,14 @@ aafApi.getPlayFeedByGame = (gameId, fn) => {
         query: `query getPlayFeedByGame($gameId: ID!) {
                     node(id: $gameId) {
                         ... on Game {
+                            __typename
+                            id
+                            homeTeam {
+                                ...team
+                            }
+                            awayTeam {
+                                ...team
+                            }
                             playsConnection(first: 1000) {
                                 nodes {
                                     ...liveGamePlayFragment
@@ -717,6 +725,13 @@ aafApi.getPlayFeedByGame = (gameId, fn) => {
                             }
                         }
                     }
+                }
+
+                fragment team on Team {
+                    __typename
+                    id
+                    abbreviation
+                    name
                 }
 
                 fragment liveGamePlayFragment on Play {
