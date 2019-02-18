@@ -9,6 +9,6 @@ aafApi.getGamesByDateRange(dateRange, (response) => {
     if (response.status === 'error') {
         throw new Error(response.data);
     } else {
-        console.log(response.data.gamesConnection.nodes);
+        console.log(response.data.games.nodes);
     }
 });

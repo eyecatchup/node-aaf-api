@@ -23,6 +23,162 @@ const postRequest = (data, fn) => {
     });
 };
 
+const fragments = {
+    gameOnGame: `fragment game on Game {
+            id
+            timeToBeDetermined
+            subseason
+            time
+            clock {
+                seconds
+                time
+                __typename
+            }
+            homeTeam {
+                ...team
+            }
+            awayTeam {
+                ...team
+            }
+            status {
+                awayTeamPoints
+                homeTeamPoints
+                quarter
+                time
+                down
+                yardsToGo
+                phase
+                possession
+            }
+            stadium {
+                id
+                name
+                address {
+                    postalCode
+                    locality
+                    administrativeArea
+                    line1
+                    line2
+                    countryCode
+                }
+            }
+            ticketingWebsiteURL
+            availability {
+                shortName
+                url
+            }
+            avStreams {
+                hlsMasterPlaylistURL
+            }
+            hlsMasterPlaylistURL
+            __typename
+        }`,
+    teamOnTeam: `fragment team on Team {
+            id
+            name
+            nickname
+            regionName
+            abbreviation
+            colors
+            avatar {
+                url
+            }
+            logo {
+                url
+            }
+            division {
+                id
+                name
+            }
+            seasonRecord: seasonsConnection(last: 1) {
+                edges {
+                    stats {
+                        gamesWon
+                        gamesLost
+                        gamesPlayed
+                    }
+                }
+            }
+            __typename
+        }`,
+    teamIdNameAbbrOnTeam: `fragment teamIdNameAbbr on Team {
+            id
+            name
+            abbreviation
+        }`,
+    playerOnPlayer: `fragment player on Player {
+            id
+            avatar {
+                url
+            }
+            name {
+                givenName
+                familyName
+            }
+            platoon
+            position
+            jerseyNumber
+            heightMillimeters
+            weightGrams
+        }`,
+    playerStatsOnPlayerStats: `fragment playerStats on PlayerStats {
+            assistedTackles
+            fieldGoalsAttempted
+            fieldGoalsBlocked
+            fieldGoalsLongestMade
+            fieldGoalsMade
+            fumbles
+            fumblesRecovered
+            gamesPlayed
+            interceptionReturns
+            miscellaneousAssistedTackles
+            miscellaneousFumblesRecovered
+            miscellaneousOpponentFumblesForced
+            miscellaneousOpponentFumblesRecovered
+            miscellaneousOwnFumblesRecovered
+            miscellaneousTackleAssists
+            miscellaneousTackles
+            opponentFumblesForced
+            opponentFumblesRecovered
+            opposingFieldGoalsBlocked
+            ownFumblesRecovered
+            passDefenses
+            passesAttempted
+            passesCompleted
+            passesIntercepted
+            passingTouchdowns
+            passingYards
+            puntingLongestKick
+            puntingYards
+            puntingYardsNet
+            puntsAttempted
+            quarterbackHits
+            receivingLongestGain
+            receivingTouchdowns
+            receivingYards
+            receptions
+            rushesAttempted
+            rushingLongestGain
+            rushingTouchdowns
+            rushingYards
+            sackYardsGained
+            sacks
+            specialTeamsAssistedTackles
+            specialTeamsFumblesRecovered
+            specialTeamsOpponentFumblesForced
+            specialTeamsOpponentFumblesRecovered
+            specialTeamsOwnFumblesRecovered
+            specialTeamsTackleAssists
+            specialTeamsTackles
+            tackleAssists
+            tackles
+            tacklesForLoss
+            timesSacked
+            twoPointConversionsCompleted
+            __typename
+        }`
+};
+
 aafApi.query = (requestPayload, fn) => {
     postRequest(requestPayload, fn);
 };
@@ -36,9 +192,9 @@ aafApi.getSeasonScheduleGames = (fn) => {
                         nodes {
                             id
                             name
-                            gamesConnection(first: 60) {
+                            games: gamesConnection(first: 60) {
                                 nodes {
-                                    ...seasonGameFragment
+                                    ...game
                                     __typename
                                 }
                             }
@@ -47,48 +203,9 @@ aafApi.getSeasonScheduleGames = (fn) => {
                     }
                 }
 
-                fragment seasonGameFragment on Game {
-                    id
-                    timeToBeDetermined
-                    subseason
-                    time
-                    awayTeam {
-                        ...team
-                    }
-                    homeTeam {
-                        ...team
-                    }
-                    stadium {
-                        id
-                        name
-                    }
-                    __typename
-                }
+                ${fragments.gameOnGame}
 
-                fragment team on Team {
-                    id
-                    name
-                    nickname
-                    regionName
-                    abbreviation
-                    logo {
-                        url
-                    }
-                    division {
-                        id
-                        name
-                    }
-                    seasonRecord: seasonsConnection(last: 1) {
-                        edges {
-                            stats {
-                                gamesWon
-                                gamesLost
-                                gamesPlayed
-                            }
-                        }
-                    }
-                    __typename
-                }`
+                ${fragments.teamOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -102,71 +219,17 @@ aafApi.getGamesByDateRange = (dateRange, fn) => {
             'first': 50
         },
         query: `query getListOfGameQuery($first: Int, $atOrAfterTime: DateTime!, $beforeTime: DateTime!) {
-                    gamesConnection(first: $first, atOrAfterTime: $atOrAfterTime, beforeTime: $beforeTime) {
+                    games: gamesConnection(first: $first, atOrAfterTime: $atOrAfterTime, beforeTime: $beforeTime) {
                         nodes {
-                            id
-                            time
-                            status {
-                                phase
-                                __typename
-                            }
-                            awayTeam {
-                                id
-                                abbreviation
-                                logo(style: LIGHT_BACKGROUND) {
-                                    url
-                                    __typename
-                                }
-                                colors
-                                seasonsConnection(last: 1) {
-                                    edges {
-                                        stats {
-                                            gamesWon
-                                            gamesLost
-                                            __typename
-                                        }
-                                        __typename
-                                    }
-                                    __typename
-                                }
-                                __typename
-                            }
-                            homeTeam {
-                                id
-                                abbreviation
-                                logo(style: LIGHT_BACKGROUND) {
-                                    url
-                                    __typename
-                                }
-                                colors
-                                seasonsConnection(last: 1) {
-                                    edges {
-                                        stats {
-                                            gamesWon
-                                            gamesLost
-                                            __typename
-                                        }
-                                        __typename
-                                    }
-                                    __typename
-                                }
-                                __typename
-                            }
-                            ticketingWebsiteURL
-                            availability {
-                                shortName
-                                url
-                                __typename
-                            }
-                            stadium {
-                                name
-                                __typename
-                            }
-                            __typename
+                            ...game
                         }
                         __typename
                     }
-                }`
+                }
+
+                ${fragments.gameOnGame}
+
+                ${fragments.teamOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -179,44 +242,17 @@ aafApi.getLiveGamesByDateRange = (dateRange, fn) => {
             beforeTime: dateRange.to
         },
         query: `query getListOfLiveGameQuery($beforeTime: DateTime!, $atOrAfterTime: DateTime!) {
-                    gamesConnection(beforeTime: $beforeTime, atOrAfterTime: $atOrAfterTime, first: 50) {
+                    games: gamesConnection(beforeTime: $beforeTime, atOrAfterTime: $atOrAfterTime, first: 50) {
                         nodes {
-                            id
-                            awayTeam {
-                                id
-                                name
-                                abbreviation
-                                logo(style: LIGHT_BACKGROUND) {
-                                    url
-                                    __typename
-                                }
-                                colors
-                                __typename
-                            }
-                            homeTeam {
-                                id
-                                name
-                                abbreviation
-                                logo(style: LIGHT_BACKGROUND) {
-                                    url
-                                    __typename
-                                }
-                                colors
-                                __typename
-                            }
-                            status {
-                                phase
-                                __typename
-                            }
-                            stadium {
-                                name
-                                __typename
-                            }
-                            __typename
+                            ...game
                         }
                         __typename
                     }
-                }`
+                }
+
+                ${fragments.gameOnGame}
+
+                ${fragments.teamOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -230,81 +266,15 @@ aafApi.getLiveGameData = (gameId, fn) => {
         query: `query getLiveGameDataQuery($gameId: ID!) {
                     node(id: $gameId) {
                         ... on Game {
-                            id
-                            clock {
-                                seconds
-                                time
-                                __typename
-                            }
-                            homeTeam {
-                                id
-                                name
-                                abbreviation
-                                logo(style: LIGHT_BACKGROUND) {
-                                    url
-                                    __typename
-                                }
-                                colors
-                                seasonsConnection(last: 1) {
-                                    edges {
-                                        stats {
-                                            gamesWon
-                                            gamesLost
-                                            __typename
-                                        }
-                                        __typename
-                                    }
-                                    __typename
-                                }
-                                __typename
-                            }
-                            awayTeam {
-                                id
-                                name
-                                abbreviation
-                                logo(style: LIGHT_BACKGROUND) {
-                                    url
-                                    __typename
-                                }
-                                colors
-                                seasonsConnection(last: 1) {
-                                    edges {
-                                        stats {
-                                            gamesWon
-                                            gamesLost
-                                            __typename
-                                        }
-                                        __typename
-                                    }
-                                    __typename
-                                }
-                                __typename
-                            }
-                            status {
-                                awayTeamPoints
-                                homeTeamPoints
-                                quarter
-                                time
-                                down
-                                yardsToGo
-                                phase
-                                possession
-                                __typename
-                            }
-                            stadium {
-                                name
-                                __typename
-                            }
-                            avStreams {
-                                hlsMasterPlaylistURL
-                                __typename
-                            }
-                            hlsMasterPlaylistURL
-                            __typename
+                            ...game
                         }
                         __typename
                     }
-                }`
+                }
+
+                ${fragments.gameOnGame}
+
+                ${fragments.teamOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -320,95 +290,40 @@ aafApi.getFullGameStatsByPlayer = (gameId, fn) => {
                             __typename
                             id
                             homeTeam {
-                                id
-                                name
-                                abbreviation
+                                ...teamIdNameAbbr
                             }
                             awayTeam {
-                                id
-                                name
-                                abbreviation
+                                ...teamIdNameAbbr
                             }
+                            subseason
                             status {
+                                homeTeamPoints
+                                awayTeamPoints
                                 phase
                             }
-                            playersConnection(first: 500) {
+                            time
+                            players: playersConnection(first: 500) {
                                 edges {
                                     node {
-                                        id
-                                        jerseyNumber
-                                        legalName {
-                                            familyName
-                                            givenName
-                                        }
-                                        avatar {
-                                            url
-                                        }
-                                        position
+                                        ...player
                                     }
                                     team {
-                                        abbreviation
+                                        ...teamIdNameAbbr
                                     }
                                     stats {
-                                        assistedTackles
-                                        fieldGoalsAttempted
-                                        fieldGoalsBlocked
-                                        fieldGoalsLongestMade
-                                        fieldGoalsMade
-                                        fumbles
-                                        fumblesRecovered
-                                        gamesPlayed
-                                        interceptionReturns
-                                        miscellaneousAssistedTackles
-                                        miscellaneousFumblesRecovered
-                                        miscellaneousOpponentFumblesForced
-                                        miscellaneousOpponentFumblesRecovered
-                                        miscellaneousOwnFumblesRecovered
-                                        miscellaneousTackleAssists
-                                        miscellaneousTackles
-                                        opponentFumblesForced
-                                        opponentFumblesRecovered
-                                        opposingFieldGoalsBlocked
-                                        ownFumblesRecovered
-                                        passDefenses
-                                        passesAttempted
-                                        passesCompleted
-                                        passesIntercepted
-                                        passingTouchdowns
-                                        passingYards
-                                        puntingLongestKick
-                                        puntingYards
-                                        puntingYardsNet
-                                        puntsAttempted
-                                        quarterbackHits
-                                        receivingLongestGain
-                                        receivingTouchdowns
-                                        receivingYards
-                                        receptions
-                                        rushesAttempted
-                                        rushingLongestGain
-                                        rushingTouchdowns
-                                        rushingYards
-                                        sackYardsGained
-                                        sacks
-                                        specialTeamsAssistedTackles
-                                        specialTeamsFumblesRecovered
-                                        specialTeamsOpponentFumblesForced
-                                        specialTeamsOpponentFumblesRecovered
-                                        specialTeamsOwnFumblesRecovered
-                                        specialTeamsTackleAssists
-                                        specialTeamsTackles
-                                        tackleAssists
-                                        tackles
-                                        tacklesForLoss
-                                        timesSacked
-                                        twoPointConversionsCompleted
+                                        ...playerStats
                                     }
                                 }
                             }
                         }
                     }
-                }`
+                }
+
+                ${fragments.teamIdNameAbbrOnTeam}
+
+                ${fragments.playerOnPlayer}
+
+                ${fragments.playerStatsOnPlayerStats}`
     };
     postRequest(requestPayload, fn);
 };
@@ -424,27 +339,29 @@ aafApi.getFullGameStatsByTeam = (gameId, fn) => {
                             __typename
                             id
                             homeTeam {
-                                ...team
+                                ...teamIdNameAbbr
                             }
                             homeTeamEdge {
                                 ...teamEdge
                             }
                             awayTeam {
-                                ...team
+                                ...teamIdNameAbbr
                             }
                             awayTeamEdge {
                                 ...teamEdge
                             }
+                            subseason
+                            status {
+                                homeTeamPoints
+                                awayTeamPoints
+                                phase
+                            }
+                            time
                         }
                     }
                 }
 
-                fragment team on Team {
-                    id
-                    name
-                    nickname
-                    abbreviation
-                }
+                ${fragments.teamIdNameAbbrOnTeam}
 
                 fragment teamEdge on GameTeamEdge {
                     stats {
@@ -501,9 +418,7 @@ aafApi.getFullSeasonStatsByTeam = (teamId, fn) => {
                 }
 
                 fragment teamInformationFragment on Team {
-                    id
-                    name
-                    abbreviation
+                    ...teamIdNameAbbr
                     seasonsConnection(last: 1) {
                         edges {
                             stats {
@@ -547,7 +462,9 @@ aafApi.getFullSeasonStatsByTeam = (teamId, fn) => {
                         }
                     }
                     __typename
-                }`
+                }
+
+                ${fragments.teamIdNameAbbrOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -560,21 +477,7 @@ aafApi.getFullSeasonStatsByTeamByPlayer = (teamId, fn) => {
         query: `query getTeamPlayersSeasonStats($teamId: ID!) {
                     node(id: $teamId) {
                         ... on Team {
-                            id
-                            name
-                            nickname
-                            abbreviation
-                            colors
-                            logo {
-                                id
-                                url
-                                __typename
-                            }
-                            wordmark(style: LIGHT_BACKGROUND) {
-                                id
-                                url
-                                __typename
-                            }
+                            ...teamIdNameAbbr
                             seasonsConnection(last: 1) {
                                 edges {
                                     stats {
@@ -590,9 +493,9 @@ aafApi.getFullSeasonStatsByTeamByPlayer = (teamId, fn) => {
                                 }
                                 __typename
                             }
-                            playersConnection(first: 1000) {
+                            players: playersConnection(first: 1000) {
                                 nodes {
-                                    ...playerConnectionFragment
+                                    ...player
                                     seasonsConnection(last: 1) {
                                         edges {
                                             stats {
@@ -613,96 +516,11 @@ aafApi.getFullSeasonStatsByTeamByPlayer = (teamId, fn) => {
                     }
                 }
 
-                fragment playerConnectionFragment on Player {
-                    id
-                    jerseyNumber
-                    heightMillimeters
-                    weightGrams
-                    name {
-                        familyName
-                        givenName
-                        __typename
-                    }
-                    position
-                    avatar {
-                        id
-                        url
-                        __typename
-                    }
-                    schoolsConnection {
-                        nodes {
-                            ...schoolConnectionFragment
-                            __typename
-                        }
-                        __typename
-                    }
-                    __typename
-                }
+                ${fragments.teamIdNameAbbrOnTeam}
 
-                fragment schoolConnectionFragment on School {
-                    id
-                    name
-                    isNCAA
-                    abbreviation
-                    __typename
-                }
+                ${fragments.playerOnPlayer}
 
-                fragment playerStats on PlayerStats {
-                    assistedTackles
-                    fieldGoalsAttempted
-                    fieldGoalsBlocked
-                    fieldGoalsLongestMade
-                    fieldGoalsMade
-                    fumbles
-                    fumblesRecovered
-                    gamesPlayed
-                    interceptionReturns
-                    miscellaneousAssistedTackles
-                    miscellaneousFumblesRecovered
-                    miscellaneousOpponentFumblesForced
-                    miscellaneousOpponentFumblesRecovered
-                    miscellaneousOwnFumblesRecovered
-                    miscellaneousTackleAssists
-                    miscellaneousTackles
-                    opponentFumblesForced
-                    opponentFumblesRecovered
-                    opposingFieldGoalsBlocked
-                    ownFumblesRecovered
-                    passDefenses
-                    passesAttempted
-                    passesCompleted
-                    passesIntercepted
-                    passingTouchdowns
-                    passingYards
-                    puntingLongestKick
-                    puntingYards
-                    puntingYardsNet
-                    puntsAttempted
-                    quarterbackHits
-                    receivingLongestGain
-                    receivingTouchdowns
-                    receivingYards
-                    receptions
-                    rushesAttempted
-                    rushingLongestGain
-                    rushingTouchdowns
-                    rushingYards
-                    sackYardsGained
-                    sacks
-                    specialTeamsAssistedTackles
-                    specialTeamsFumblesRecovered
-                    specialTeamsOpponentFumblesForced
-                    specialTeamsOpponentFumblesRecovered
-                    specialTeamsOwnFumblesRecovered
-                    specialTeamsTackleAssists
-                    specialTeamsTackles
-                    tackleAssists
-                    tackles
-                    tacklesForLoss
-                    timesSacked
-                    twoPointConversionsCompleted
-                    __typename
-                }`
+                ${fragments.playerStatsOnPlayerStats}`
     };
     postRequest(requestPayload, fn);
 };
@@ -718,25 +536,25 @@ aafApi.getPlayFeedByGame = (gameId, fn) => {
                             __typename
                             id
                             homeTeam {
-                                ...team
+                                ...teamIdNameAbbr
                             }
                             awayTeam {
-                                ...team
+                                ...teamIdNameAbbr
                             }
-                            playsConnection(first: 1000) {
+                            plays: playsConnection(first: 1000) {
                                 nodes {
                                     ...liveGamePlayFragment
                                 }
                             }
+                            subseason
+                            status {
+                                homeTeamPoints
+                                awayTeamPoints
+                                phase
+                            }
+                            time
                         }
                     }
-                }
-
-                fragment team on Team {
-                    __typename
-                    id
-                    abbreviation
-                    name
                 }
 
                 fragment liveGamePlayFragment on Play {
@@ -753,7 +571,9 @@ aafApi.getPlayFeedByGame = (gameId, fn) => {
                     yardLine
                     sequence
                     __typename
-                }`
+                }
+
+                ${fragments.teamIdNameAbbrOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -765,45 +585,12 @@ aafApi.getTeams = (fn) => {
         query: `query getListOfTeamsQuery {
                     teams: teamsConnection {
                         nodes {
-                            __typename
-                            id
-                            name
-                            abbreviation
-                            nickname
-                            division {
-                                id
-                                name
-                            }
-                            colors
-                            logo {
-                                url
-                            }
-                            lightWordmark: wordmark(style: LIGHT_BACKGROUND) {
-                                url
-                            }
-                            darkWordmark: wordmark(style: DARK_BACKGROUND) {
-                                url
-                            }
-                            stadium {
-                                id
-                                name
-                            }
-                            facebookHandle
-                            instagramHandle
-                            twitterHandle
-                            shopWebsiteURL
-                            seasonRecord: seasonsConnection(last: 1) {
-                                edges {
-                                    stats {
-                                        gamesWon
-                                        gamesLost
-                                        gamesPlayed
-                                    }
-                                }
-                            }
+                            ...team
                         }
                     }
-                }`
+                }
+
+                ${fragments.teamOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -819,40 +606,31 @@ aafApi.getTeamInfoBasic = (teamId, fn) => {
                             ...teamInformationFragment
                             __typename
                         }
-                        __typename
                     }
                 }
 
                 fragment teamInformationFragment on Team {
-                    id
-                    name
-                    abbreviation
-                    colors
-                    coach {
-                        name {
-                            givenName
-                            familyName
-                        }
-                    }
-                    wordmark {
-                        id
-                        url
-                    }
-                    nickname
+                    ...team
                     facebookHandle
                     twitterHandle
                     instagramHandle
                     shopWebsiteURL
-                    avatar {
+                    coach {
                         id
-                        url
+                        name {
+                            givenName
+                            familyName
+                        }
+                        title
                     }
                     stadium {
                         id
                         name
                     }
                     __typename
-                }`
+                }
+
+                ${fragments.teamOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -873,28 +651,24 @@ aafApi.getTeamInfo = (teamId, fn) => {
                 }
 
                 fragment teamInformationFragment on Team {
-                    id
-                    name
-                    abbreviation
-                    colors
-                    coach {
-                        name {
-                            givenName
-                            familyName
-                        }
-                    }
-                    wordmark {
-                        id
-                        url
-                    }
-                    nickname
+                    ...team
                     facebookHandle
                     twitterHandle
                     instagramHandle
                     shopWebsiteURL
-                    avatar {
-                        id
+                    lightWordmark: wordmark(style: LIGHT_BACKGROUND) {
                         url
+                    }
+                    darkWordmark: wordmark(style: DARK_BACKGROUND) {
+                        url
+                    }
+                    coach {
+                        id
+                        name {
+                            givenName
+                            familyName
+                        }
+                        title
                     }
                     stadium {
                         id
@@ -908,37 +682,21 @@ aafApi.getTeamInfo = (teamId, fn) => {
                             countryCode
                         }
                     }
-                    gamesConnection {
+                    games: gamesConnection {
                         edges {
                             node {
-                                time
-                                awayTeam {
-                                    name
-                                    abbreviation
-                                }
-                                homeTeam {
-                                    name
-                                    abbreviation
-                                }
-                                status {
-                                    phase
-                                }
+                                ...game
                             }
                         }
                     }
-                    playersConnection(first: 100) {
+                    players: playersConnection(first: 500) {
                         edges {
                             node {
-                                name {
-                                    givenName
-                                    familyName
-                                }
-                                position
-                                jerseyNumber
+                                ...player
                             }
                         }
                     }
-                    seasonsConnection(last: 1) {
+                    seasonStats: seasonsConnection(last: 1) {
                         edges {
                             stats {
                                 gamesWon
@@ -980,7 +738,13 @@ aafApi.getTeamInfo = (teamId, fn) => {
                         }
                     }
                     __typename
-                }`
+                }
+
+                ${fragments.teamOnTeam}
+
+                ${fragments.gameOnGame}
+
+                ${fragments.playerOnPlayer}`
     };
     postRequest(requestPayload, fn);
 };
@@ -994,6 +758,15 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                     node(id: $teamId) {
                         ... on Team {
                             ...teamInformationFragment
+                            seasonRecord: seasonsConnection(last: 1) {
+                                edges {
+                                    stats {
+                                        gamesWon
+                                        gamesLost
+                                        gamesPlayed
+                                    }
+                                }
+                            }
                             __typename
                         }
                         __typename
@@ -1001,10 +774,11 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                 }
 
                 fragment teamInformationFragment on Team {
-                    id
-                    name
-                    abbreviation
-                    gamesConnection {
+                    ...teamIdNameAbbr
+                    division {
+                        name
+                    }
+                    games: gamesConnection {
                         edges {
                             node {
                                 __typename
@@ -1014,24 +788,16 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                                     url
                                 }
                                 time
-                                awayTeamEdge {
-                                    stats {
-                                        points
-                                    }
-                                }
                                 awayTeam {
-                                    ...team
-                                }
-                                homeTeamEdge {
-                                    stats {
-                                        points
-                                    }
+                                    ...teamIdNameAbbr
                                 }
                                 homeTeam {
-                                    ...team
+                                    ...teamIdNameAbbr
                                 }
                                 subseason
                                 status {
+                                    homeTeamPoints
+                                    awayTeamPoints
                                     phase
                                 }
                                 stadium {
@@ -1044,20 +810,7 @@ aafApi.getGamesByTeam = (teamId, fn) => {
                     __typename
                 }
 
-                fragment team on Team {
-                    id
-                    name
-                    abbreviation
-                    seasonsConnection(last: 1) {
-                        edges {
-                            stats {
-                                gamesWon
-                                gamesLost
-                                gamesPlayed
-                            }
-                        }
-                    }
-                }`
+                ${fragments.teamIdNameAbbrOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
@@ -1070,6 +823,7 @@ aafApi.getPlayersByTeam = (teamId, fn) => {
         query: `query getPlayersByTeam($teamId: ID!) {
                     node(id: $teamId) {
                         ... on Team {
+                            ...teamIdNameAbbr
                             ...teamInformationFragment
                             __typename
                         }
@@ -1078,30 +832,19 @@ aafApi.getPlayersByTeam = (teamId, fn) => {
                 }
 
                 fragment teamInformationFragment on Team {
-                    id
-                    name
-                    abbreviation
                     players: playersConnection(first: 500) {
                         edges {
                             node {
-                                id
-                                avatar {
-                                    url
-                                }
-                                name {
-                                    givenName
-                                    familyName
-                                }
-                                platoon
-                                position
-                                jerseyNumber
-                                heightMillimeters
-                                weightGrams
+                                ...player
                             }
                         }
                     }
                     __typename
-                }`
+                }
+
+                ${fragments.teamIdNameAbbrOnTeam}
+
+                ${fragments.playerOnPlayer}`
     };
     postRequest(requestPayload, fn);
 };
@@ -1114,9 +857,7 @@ aafApi.getRosterByTeam = (teamId, fn) => {
         query: `query getTeamRosterListQuery($teamId: ID!) {
                     node(id: $teamId) {
                         ... on Team {
-                            id
-                            abbreviation
-                            name
+                            ...teamIdNameAbbr
                             offense: playersConnection(first: 100, platoon: OFFENSE) {
                                 nodes {
                                     ...playerRosterFragment
@@ -1148,19 +889,7 @@ aafApi.getRosterByTeam = (teamId, fn) => {
                 }
 
                 fragment playerRosterFragment on Player {
-                    id
-                    name {
-                        familyName
-                        givenName
-                    }
-                    platoon
-                    position
-                    jerseyNumber
-                    heightMillimeters
-                    weightGrams
-                    avatar {
-                        url
-                    }
+                    ...player
                     school: schoolsConnection {
                         nodes {
                             ...schoolConnectionFragment
@@ -1195,7 +924,11 @@ aafApi.getRosterByTeam = (teamId, fn) => {
                     }
                     title
                     __typename
-                }`
+                }
+
+                ${fragments.playerOnPlayer}
+
+                ${fragments.teamIdNameAbbrOnTeam}`
     };
     postRequest(requestPayload, fn);
 };
