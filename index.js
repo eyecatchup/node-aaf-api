@@ -8,7 +8,6 @@ const postRequest = (data, fn) => {
         url: 'https://api.platform.aaf.com/v1/graphql',
         json: true,
         headers: {
-            'Cache-Control': 'no-cache',
             'Content-Type': 'application/json',
             'User-Agent': 'node-aaf-api (https://github.com/eyecatchup/node-aaf-api)'
         },
