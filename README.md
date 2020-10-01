@@ -1,4 +1,4 @@
-# node-aaf-api
+# node-aaf-api (
 
 (Simple) NodeJS wrapper for the [AAF GraphQL API](https://aaf.engineering/introducing-the-aaf-graphql-api/).
 
